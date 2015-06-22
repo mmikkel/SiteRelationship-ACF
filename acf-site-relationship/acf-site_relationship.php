@@ -4,7 +4,7 @@
 Plugin Name: Advanced Custom Fields: Site Relationship
 Plugin URI: https://github.com/mmikkel/SiteRelationship-ACF
 Description: Site Relationship field for ACF5
-Version: 0.1.2
+Version: 0.1.3
 Author: Mats Mikkel Rummelhoff
 Author URI: http://mmikkel.no
 License: GPLv2 or later

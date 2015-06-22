@@ -109,6 +109,15 @@ class acf_field_site_relationship extends acf_field {
         // return
         $r = wp_get_sites($args);
 
+        if ( ! $r || ! is_array( $r ) || empty( $r ) ) {
+            return false;
+        }
+
+        // Add path to domain (hotfix)
+        for ( $i = 0; $i < count( $r ); ++$i ) {
+            $r[ $i ][ 'domain' ] = $this->get_site_title( $r[ $i ] );
+        }
+
         // search
         if( $options['s'] ) {
             $temp = $r;
@@ -219,14 +228,16 @@ class acf_field_site_relationship extends acf_field {
     *  @return  (string)
     */
 
-    function get_site_title( $site, $field, $site_id = 0 ) {
+    function get_site_title( $site, $field = false, $site_id = 0 ) {
 
         $title = rtrim( $site[ 'domain' ], '/' ) . ( $site[ 'path' ] != '/' ? '/' . ltrim( $site[ 'path' ], '/' ) : '' );
 
         // filters
-        $title = apply_filters('acf/fields/site_relationship/result', $title, $site, $field, $site_id);
-        $title = apply_filters('acf/fields/site_relationship/result/name=' . $field['_name'], $title, $site, $field, $site_id);
-        $title = apply_filters('acf/fields/site_relationship/result/key=' . $field['key'], $title, $site, $field, $site_id);
+        if ( $field ) {
+            $title = apply_filters('acf/fields/site_relationship/result', $title, $site, $field, $site_id);
+            $title = apply_filters('acf/fields/site_relationship/result/name=' . $field['_name'], $title, $site, $field, $site_id);
+            $title = apply_filters('acf/fields/site_relationship/result/key=' . $field['key'], $title, $site, $field, $site_id);
+        }
 
         // return
         return $title;
