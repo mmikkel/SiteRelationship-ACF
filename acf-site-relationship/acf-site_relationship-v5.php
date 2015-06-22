@@ -221,7 +221,7 @@ class acf_field_site_relationship extends acf_field {
 
     function get_site_title( $site, $field, $site_id = 0 ) {
 
-        $title = $site[ 'domain' ];
+        $title = rtrim( $site[ 'domain' ], '/' ) . ( $site[ 'path' ] != '/' ? '/' . ltrim( $site[ 'path' ], '/' ) : '' );
 
         // filters
         $title = apply_filters('acf/fields/site_relationship/result', $title, $site, $field, $site_id);
