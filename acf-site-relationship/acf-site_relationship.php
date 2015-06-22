@@ -2,9 +2,9 @@
 
 /*
 Plugin Name: Advanced Custom Fields: Site Relationship
-Plugin URI: PLUGIN_URL
-Description: SHORT_DESCRIPTION
-Version: 1.0.0
+Plugin URI: https://github.com/mmikkel/SiteRelationship-ACF
+Description: Site Relationship field for ACF5
+Version: 0.1.1
 Author: Mats Mikkel Rummelhoff
 Author URI: http://mmikkel.no
 License: GPLv2 or later

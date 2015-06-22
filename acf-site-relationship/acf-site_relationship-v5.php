@@ -142,17 +142,27 @@ class acf_field_site_relationship extends acf_field {
         $sites = array();
 
         if ( is_array( $blog_ids ) && ! empty( $blog_ids ) ) {
+
+            // Cast IDs to integers
+            $blog_ids = array_map( 'intval', $blog_ids );
+
+            // Get sites (ouch)
             global $wpdb;
             $temp = wp_get_sites(array(
                 'network_id' => $wpdb->siteid,
             ));
+
             if ( is_array( $temp ) && ! empty( $temp ) ) {
-                foreach ( $temp as $site ) {
-                    if ( in_array( $site[ 'blog_id' ], $blog_ids ) ) {
-                        $sites[] = $site;
+                foreach ( $blog_ids as $blog_id ) {
+                    foreach ( $temp as $site ) {
+                        if ( $site[ 'blog_id' ] == $blog_id ) {
+                            $sites[] = $site;
+                            break;
+                        }
                     }
                 }
             }
+
         }
 
         return ! empty( $sites ) ? $sites : false;
@@ -292,14 +302,14 @@ class acf_field_site_relationship extends acf_field {
 
             <ul class="acf-bl list">
 
-                <?php if( !empty($field['value']) ):
+                <?php if ( ! empty( $field[ 'value' ] ) ) {
 
                     $sites = $this->get_sites_by_blog_id( $field[ 'value' ] );
 
                     // set choices
-                    if( !empty($sites) ):
+                    if( is_array( $sites ) && ! empty( $sites ) ) {
 
-                        foreach( $sites as $site ):
+                        foreach( $sites as $site ) {
 
                             ?><li>
                                 <input type="hidden" name="<?php echo $field[ 'name' ]; ?>[]" value="<?php echo $site[ 'blog_id' ]; ?>" />
@@ -309,11 +319,11 @@ class acf_field_site_relationship extends acf_field {
                                 </span>
                             </li><?php
 
-                        endforeach;
+                        }
 
-                    endif;
+                    }
 
-                endif; ?>
+                } ?>
 
             </ul>
 
@@ -459,18 +469,6 @@ class acf_field_site_relationship extends acf_field {
         // validate
         if( empty($value) ) {
             return $value;
-        }
-
-
-        // force value to array
-        $value = acf_force_type_array( $value );
-
-        // array
-        foreach( $value as $k => $v ){
-            // object?
-            if( is_object($v) && isset($v->ID) ) {
-                $value[ $k ] = $v->ID;
-            }
         }
 
         // save value as strings, so we can clearly search for them in SQL LIKE statements
